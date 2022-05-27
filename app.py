@@ -79,6 +79,8 @@ app = Flask(__name__)
 def predict():
     json_data = request.get_json()
     data = convert_input(list(json_data.values()))
+    
+    model = unzip_and_load_model()
     proba = model.predict_proba([data])[0]
     predict = list(zip(model.classes_, proba))
 
@@ -89,7 +91,6 @@ def predict():
 
 
 if __name__ == '__main__':
-    model = unzip_and_load_model()
     app.run()
 
 
