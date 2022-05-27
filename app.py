@@ -86,7 +86,7 @@ def predict():
         proba = model.predict_proba([data])[0]
         predict = list(zip(model.classes_, proba))
         
-        response.append({'empate': proba[0], 'vitoria mandante': proba[1], 'vitoria visitante': proba[2]})
+        response.append({'empate': proba[0], 'vitoria_mandante': proba[1], 'vitoria_visitante': proba[2]})
 
     return jsonify(response)
 
