@@ -100,12 +100,3 @@ def predict():
 
 if __name__ == '__main__':
     app.run()
-
-
-# In[ ]:
-
-
-# import sklearn
-
-# print(sklearn.__version__)
-
