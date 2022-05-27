@@ -39,7 +39,7 @@ def convert_input(input_array):
     
     check_new(times, input_array[2])
     mandante = times.index(input_array[2])
-    check_new(times, input_array[2])
+    check_new(times, input_array[3])
     visitante = times.index(input_array[3])
     
     check_new(arenas, input_array[4])
@@ -77,17 +77,21 @@ app = Flask(__name__)
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    json_data = request.get_json()
-    data = convert_input(list(json_data.values()))
-    
     model = unzip_and_load_model()
-    proba = model.predict_proba([data])[0]
-    predict = list(zip(model.classes_, proba))
+    
+    response = []
+    json_data = request.get_json()
+    for d in json_data:
+        data = convert_input(list(d.values()))
+        proba = model.predict_proba([data])[0]
+        predict = list(zip(model.classes_, proba))
+        
+        response.append({'empate': proba[0], 'vitoria mandante': proba[1], 'vitoria visitante': proba[2]})
 
-    return jsonify({'empate': proba[0], 'vitoria mandante': proba[1], 'vitoria visitante': proba[2]})
+    return jsonify(response)
 
 
-# In[5]:
+# In[ ]:
 
 
 if __name__ == '__main__':
@@ -97,5 +101,7 @@ if __name__ == '__main__':
 # In[ ]:
 
 
+# import sklearn
 
+# print(sklearn.__version__)
 
