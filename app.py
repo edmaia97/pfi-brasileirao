@@ -10,6 +10,7 @@ import zipfile
 import pandas as pd
 
 from flask import Flask, request, jsonify
+from flask_cors import CORS, cross_origin
 
 
 # In[2]:
@@ -74,8 +75,11 @@ def unzip_and_load_model():
 
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.route('/predict', methods=['POST'])
+@cross_origin()
 def predict():
     model = unzip_and_load_model()
     
