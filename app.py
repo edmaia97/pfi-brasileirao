@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[17]:
+# In[1]:
 
 
 import joblib
 import pickle
+import zipfile
 import pandas as pd
 
 from flask import Flask, request, jsonify
 
 
-# In[18]:
+# In[2]:
 
 
 dias_semana = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado']
@@ -21,7 +22,7 @@ with open('features.pkl', 'rb') as file:
     uf_estados = pickle.load(file)
 
 
-# In[19]:
+# In[3]:
 
 
 def get_resultado(n):
@@ -60,13 +61,21 @@ def check_new(array, value):
         
     return array
 
+def unzip_and_load_model():
+    with zipfile.ZipFile('pfi_brasileirao.zip', 'r') as zip_ref:
+        zip_ref.extractall('.')
+        
+    model = joblib.load('pfi_brasileirao.joblib')
+    
+    return model
 
-# In[20]:
+
+# In[4]:
 
 
 app = Flask(__name__)
 
-@app.route('/predict', methods=['GET', 'POST'])
+@app.route('/predict', methods=['POST'])
 def predict():
     json_data = request.get_json()
     data = convert_input(list(json_data.values()))
@@ -76,10 +85,16 @@ def predict():
     return jsonify({'empate': proba[0], 'vitoria mandante': proba[1], 'vitoria visitante': proba[2]})
 
 
-# In[21]:
+# In[5]:
 
 
 if __name__ == '__main__':
-    model = joblib.load('pfi_brasileirao.pkl')
+    model = unzip_and_load_model()
     app.run()
+
+
+# In[ ]:
+
+
+
 
